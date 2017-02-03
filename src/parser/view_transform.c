@@ -5457,6 +5457,10 @@ mq_translate_subqueries (PARSER_CONTEXT * parser, DB_OBJECT * class_object, PT_N
 
       parser_walk_tree (parser, query_spec, pt_set_is_view_spec, NULL, NULL, NULL);
 
+      /* specs referring a CTE will have an entity name, just like a normal class;
+       * we must resolve such specs before pt_compile */
+      (void) parser_walk_tree (parser, query_spec, pt_resolve_cte_specs, NULL, NULL, NULL);
+
       /* apply semantic checks */
       query_spec = pt_compile (parser, query_spec);
 

@@ -7879,6 +7879,10 @@ pt_check_create_view (PARSER_CONTEXT * parser, PT_NODE * stmt)
 	}
       crt_qry = result_stmt;
 
+      /* specs referring a CTE will have an entity name, just like a normal class;
+       * we must resolve such specs before pt_semantic_check */
+      (void) parser_walk_tree (parser, crt_qry, pt_resolve_cte_specs, NULL, NULL, NULL);
+
       crt_qry->do_not_replace_orderby = 1;
       result_stmt = pt_semantic_check (parser, crt_qry);
       if (pt_has_error (parser))
